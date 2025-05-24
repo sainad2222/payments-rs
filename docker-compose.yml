@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: payments-db
+    restart: always
+    environment:
+      POSTGRES_USER: payments
+      POSTGRES_PASSWORD: payments123
+      POSTGRES_DB: payments
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: payments-app
+    restart: always
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgres://payments:payments123@postgres:5432/payments
+      JWT_SECRET: your_jwt_secret_here
+      PORT: 3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres-data: 
