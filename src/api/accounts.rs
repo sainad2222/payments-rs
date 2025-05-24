@@ -11,5 +11,5 @@ pub fn create_router() -> Router<Config> {
     Router::new()
         .route("/", post(create_account))
         .route("/", get(list_accounts))
-        .route("/{{:id}}", get(get_account))
+        .route("/{:id}", get(get_account))
 }
