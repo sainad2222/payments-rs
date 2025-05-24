@@ -4,6 +4,7 @@ use crate::utils::error::AppError;
 use deadpool_postgres::Client;
 use uuid::Uuid;
 
+#[allow(dead_code)]
 pub async fn create_transaction(
     client: &mut Client,
     user_id: Uuid,
@@ -23,6 +24,7 @@ pub async fn create_transaction(
     transactions::create_transaction(client, user_id, &normalized_request).await
 }
 
+#[allow(dead_code)]
 pub async fn get_transaction(
     client: &mut Client,
     transaction_id: Uuid,
@@ -41,6 +43,7 @@ pub async fn get_transaction(
     transactions::get_transaction_by_id(client, transaction_id).await
 }
 
+#[allow(dead_code)]
 pub async fn list_user_transactions(
     client: &mut Client,
     user_id: Uuid,

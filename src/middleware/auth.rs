@@ -9,6 +9,7 @@ use jsonwebtoken::TokenData;
 use uuid::Uuid;
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct CurrentUser {
     pub user_id: Uuid,
     pub username: String,
@@ -48,6 +49,7 @@ where
     }
 }
 
+#[allow(dead_code)]
 pub fn get_current_user(token_data: &TokenData<Claims>) -> Result<CurrentUser, AppError> {
     let user_id = Uuid::parse_str(&token_data.claims.sub)
         .map_err(|_| AppError::Auth("Invalid user ID in token".to_string()))?;

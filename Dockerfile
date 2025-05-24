@@ -15,7 +15,6 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 COPY --from=builder /app/target/release/payments-backend /app/payments-backend
-COPY .env /app/.env
 
 EXPOSE 3000
 

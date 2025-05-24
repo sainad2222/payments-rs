@@ -79,6 +79,7 @@ pub async fn get_user_by_id(client: &Client, user_id: Uuid) -> Result<User, AppE
     })
 }
 
+#[allow(dead_code)]
 pub async fn get_user_by_email(client: &Client, email: &str) -> Result<User, AppError> {
     let row = client
         .query_opt(
@@ -101,6 +102,7 @@ pub async fn get_user_by_email(client: &Client, email: &str) -> Result<User, App
     })
 }
 
+#[allow(dead_code)]
 pub async fn get_user_by_username(client: &Client, username: &str) -> Result<User, AppError> {
     let row = client
         .query_opt(

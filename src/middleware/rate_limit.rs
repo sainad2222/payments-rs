@@ -12,8 +12,11 @@ use std::sync::{Arc, Mutex};
 use std::time::{Duration, Instant};
 
 #[derive(Debug, Clone)]
+#[allow(dead_code)]
 pub struct RateLimiter {
+    #[allow(dead_code)]
     store: Arc<Mutex<HashMap<String, (usize, Instant)>>>,
+    #[allow(dead_code)]
     requests_per_minute: usize,
 }
 
@@ -32,6 +35,7 @@ impl Default for RateLimiter {
     }
 }
 
+#[allow(dead_code)]
 pub async fn rate_limiter(
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     headers: HeaderMap,
