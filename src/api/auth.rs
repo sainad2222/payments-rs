@@ -1,12 +1,12 @@
-use axum::{
-    routing::post,
-    Router,
+use crate::{
+    config::Config,
+    handlers::auth::{login, register},
 };
-use crate::handlers::auth::{login, register};
-use crate::config::Config;
+use axum::{Router, routing::post};
 
 pub fn create_router() -> Router<Config> {
     Router::new()
         .route("/register", post(register))
         .route("/login", post(login))
-} 
+}
+

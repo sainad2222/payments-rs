@@ -1,12 +1,12 @@
 use axum::{
-    extract::{Extension, Path},
     Json,
+    extract::{Extension, Path, State},
 };
 use uuid::Uuid;
 use validator::Validate;
 
 use crate::config::Config;
-use crate::db::{accounts, Database};
+use crate::db::{Database, accounts};
 use crate::middleware::auth::CurrentUser;
 use crate::models::account::{AccountListResponse, AccountResponse, CreateAccountRequest};
 use crate::utils::error::AppError;
@@ -14,7 +14,7 @@ use crate::utils::error::AppError;
 pub async fn create_account(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
     Json(payload): Json<CreateAccountRequest>,
 ) -> Result<Json<AccountResponse>, AppError> {
     // Validate the payload
@@ -37,7 +37,7 @@ pub async fn create_account(
 pub async fn get_account(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
     Path(account_id): Path<Uuid>,
 ) -> Result<Json<AccountResponse>, AppError> {
     let client = db.pool.get().await?;
@@ -64,7 +64,7 @@ pub async fn get_account(
 pub async fn list_accounts(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
 ) -> Result<Json<AccountListResponse>, AppError> {
     let client = db.pool.get().await?;
     let accounts = accounts::get_user_accounts(&client, current_user.user_id).await?;
@@ -85,4 +85,5 @@ pub async fn list_accounts(
     Ok(Json(AccountListResponse {
         accounts: account_responses,
     }))
-} 
+}
+

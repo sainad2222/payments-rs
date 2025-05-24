@@ -40,7 +40,7 @@ cd payments-backend
 # Start the application and database
 docker-compose up -d
 
-# The API will be available at http://localhost:3000
+# The API will be available at http://localhost:3002
 ```
 
 ### Manual Setup
@@ -63,7 +63,7 @@ Configure the application using these environment variables:
 - `DATABASE_URL`: PostgreSQL connection string
 - `JWT_SECRET`: Secret key for JWT token generation
 - `JWT_EXPIRATION`: Token expiration time in seconds (default: 86400)
-- `PORT`: HTTP server port (default: 3000)
+- `PORT`: HTTP server port (default: 3002)
 - `RUST_LOG`: Logging level (default: debug)
 
 ## API Documentation

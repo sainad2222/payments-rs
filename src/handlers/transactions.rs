@@ -1,5 +1,5 @@
 use axum::{
-    extract::{Extension, Path, Query},
+    extract::{Extension, Path, Query, State},
     Json,
 };
 use serde::Deserialize;
@@ -34,7 +34,7 @@ fn default_page_size() -> usize {
 pub async fn create_transaction(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
     Json(payload): Json<CreateTransactionRequest>,
 ) -> Result<Json<TransactionResponse>, AppError> {
     // Manually validate the payload
@@ -62,7 +62,7 @@ pub async fn create_transaction(
 pub async fn get_transaction(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
     Path(transaction_id): Path<Uuid>,
 ) -> Result<Json<TransactionResponse>, AppError> {
     let mut client = db.pool.get().await?;
@@ -99,7 +99,7 @@ pub async fn get_transaction(
 pub async fn list_transactions(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
     Query(params): Query<PaginationParams>,
 ) -> Result<Json<TransactionListResponse>, AppError> {
     let mut client = db.pool.get().await?;

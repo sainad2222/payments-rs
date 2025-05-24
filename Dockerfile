@@ -5,7 +5,7 @@ COPY . .
 
 RUN cargo build --release
 
-FROM debian:bullseye-slim
+FROM debian:bookworm-slim
 
 RUN apt-get update && apt-get install -y \
     ca-certificates \
@@ -15,7 +15,8 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 COPY --from=builder /app/target/release/payments-backend /app/payments-backend
+COPY .env /app/.env
 
-EXPOSE 3000
+EXPOSE 3002
 
 CMD ["/app/payments-backend"] 

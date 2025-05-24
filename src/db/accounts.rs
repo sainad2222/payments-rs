@@ -1,9 +1,9 @@
+use crate::db::decimal::PgDecimal;
 use crate::models::account::{Account, AccountStatus, CreateAccountRequest};
 use crate::utils::error::AppError;
 use deadpool_postgres::Client;
 use rust_decimal::Decimal;
 use uuid::Uuid;
-use crate::db::decimal::PgDecimal;
 
 pub async fn create_account(
     client: &Client,
@@ -46,7 +46,7 @@ pub async fn create_account(
     })
 }
 
-pub async fn get_account<T>(client: &T, account_id: Uuid) -> Result<Account, AppError> 
+pub async fn get_account<T>(client: &T, account_id: Uuid) -> Result<Account, AppError>
 where
     T: deadpool_postgres::GenericClient + Sync + Send,
 {
@@ -102,7 +102,7 @@ pub async fn update_balance<T>(
     client: &T,
     account_id: Uuid,
     amount: Decimal,
-) -> Result<Account, AppError> 
+) -> Result<Account, AppError>
 where
     T: deadpool_postgres::GenericClient + Sync + Send,
 {
@@ -126,4 +126,4 @@ where
         created_at: row.get("created_at"),
         updated_at: row.get("updated_at"),
     })
-} 
+}

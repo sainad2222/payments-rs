@@ -1,5 +1,7 @@
-use crate::config::Config;
-use crate::handlers::transactions::{create_transaction, get_transaction, list_transactions};
+use crate::{
+    config::Config,
+    handlers::transactions::{create_transaction, get_transaction, list_transactions},
+};
 use axum::{
     Router,
     routing::{get, post},
@@ -11,4 +13,3 @@ pub fn create_router() -> Router<Config> {
         .route("/", get(list_transactions))
         .route("/{{:id}}", get(get_transaction))
 }
-

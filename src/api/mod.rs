@@ -1,12 +1,9 @@
-mod auth;
-mod users;
 mod accounts;
+mod auth;
 mod transactions;
+mod users;
 
-use axum::{
-    routing::get,
-    Router,
-};
+use axum::{Router, routing::get};
 use crate::config::Config;
 
 pub fn create_router() -> Router<Config> {
@@ -20,4 +17,5 @@ pub fn create_router() -> Router<Config> {
 
 async fn health_check() -> &'static str {
     "OK"
-} 
+}
+

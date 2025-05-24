@@ -1,5 +1,7 @@
-use crate::config::Config;
-use crate::handlers::accounts::{create_account, get_account, list_accounts};
+use crate::{
+    config::Config,
+    handlers::accounts::{create_account, get_account, list_accounts},
+};
 use axum::{
     Router,
     routing::{get, post},
@@ -11,4 +13,3 @@ pub fn create_router() -> Router<Config> {
         .route("/", get(list_accounts))
         .route("/{{:id}}", get(get_account))
 }
-

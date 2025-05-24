@@ -23,6 +23,7 @@ use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 async fn main() {
     // Load configuration
     let config = Config::from_env();
+    let config_clone = config.clone();
 
     // Initialize logging
     tracing_subscriber::registry()
@@ -43,7 +44,7 @@ async fn main() {
 
     // Build application routes
     let app = api::create_router()
-        .with_state(config.clone())
+        .with_state(config_clone)
         .layer(TraceLayer::new_for_http())
         .layer(cors)
         .layer(Extension(db));

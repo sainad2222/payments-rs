@@ -1,5 +1,5 @@
 use axum::{
-    extract::Extension,
+    extract::{Extension, State},
     Json,
 };
 use validator::Validate;
@@ -12,7 +12,7 @@ use crate::utils::jwt::create_token;
 
 pub async fn register(
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(config): State<Config>,
     Json(payload): Json<CreateUserRequest>,
 ) -> Result<Json<UserResponse>, AppError> {
     // Validate the payload
@@ -34,7 +34,7 @@ pub async fn register(
 
 pub async fn login(
     Extension(db): Extension<Database>,
-    Extension(config): Extension<Config>,
+    State(config): State<Config>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<LoginResponse>, AppError> {
     // Validate the credentials

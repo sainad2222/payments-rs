@@ -1,5 +1,5 @@
 use axum::{
-    extract::Extension,
+    extract::{Extension, State},
     Json,
 };
 use validator::Validate;
@@ -13,7 +13,7 @@ use crate::utils::error::AppError;
 pub async fn get_profile(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
 ) -> Result<Json<UserResponse>, AppError> {
     let client = db.pool.get().await?;
     let user = users::get_user_by_id(&client, current_user.user_id).await?;
@@ -30,7 +30,7 @@ pub async fn get_profile(
 pub async fn update_profile(
     current_user: CurrentUser,
     Extension(db): Extension<Database>,
-    Extension(_config): Extension<Config>,
+    State(_config): State<Config>,
     Json(payload): Json<UpdateUserRequest>,
 ) -> Result<Json<UserResponse>, AppError> {
     // Validate the payload

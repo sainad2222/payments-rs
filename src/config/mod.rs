@@ -21,7 +21,7 @@ impl Config {
             .parse::<i64>()
             .expect("JWT_EXPIRATION must be a valid integer");
         let port = env::var("PORT")
-            .unwrap_or_else(|_| "3000".to_string())
+            .unwrap_or_else(|_| "3002".to_string())
             .parse::<u16>()
             .expect("PORT must be a valid integer");
 
@@ -32,4 +32,5 @@ impl Config {
             port,
         }
     }
-} 
+}
+
