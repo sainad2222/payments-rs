@@ -6,8 +6,6 @@ use crate::utils::error::AppError;
 use deadpool_postgres::Client;
 use serde_json::json;
 use uuid::Uuid;
-use crate::db::decimal::PgDecimal;
-use rust_decimal::Decimal;
 
 pub async fn create_transaction(
     client: &mut Client,
@@ -113,7 +111,6 @@ pub async fn create_transaction(
                 )));
             }
 
-            // Check if sufficient funds
             if source_account.balance < data.amount {
                 return Err(AppError::BadRequest(format!(
                     "Insufficient funds: balance is {}, but transfer amount is {}",
@@ -134,7 +131,7 @@ pub async fn create_transaction(
             &[
                 &data.source_account_id,
                 &data.destination_account_id,
-                &PgDecimal(data.amount),
+                &data.amount,
                 &data.currency,
                 &"pending",
                 &data.transaction_type,
@@ -242,8 +239,29 @@ pub async fn create_transaction(
     // Commit the transaction
     tx.commit().await?;
 
-    // Get the updated transaction
-    get_transaction_by_id(client, transaction_id).await
+    // Get the final transaction record
+    let row = client
+        .query_one(
+            "SELECT id, source_account_id, destination_account_id, amount, currency, status, 
+                    transaction_type, description, created_at, updated_at 
+             FROM transactions 
+             WHERE id = $1",
+            &[&transaction_id],
+        )
+        .await?;
+
+    Ok(Transaction {
+        id: row.get("id"),
+        source_account_id: row.get("source_account_id"),
+        destination_account_id: row.get("destination_account_id"),
+        amount: row.get("amount"),
+        currency: row.get("currency"),
+        status: TransactionStatus::from(row.get::<_, &str>("status")),
+        transaction_type: TransactionType::from(row.get::<_, &str>("transaction_type")),
+        description: row.get("description"),
+        created_at: row.get("created_at"),
+        updated_at: row.get("updated_at"),
+    })
 }
 
 pub async fn get_transaction_by_id(
@@ -267,7 +285,7 @@ pub async fn get_transaction_by_id(
         id: row.get("id"),
         source_account_id: row.get("source_account_id"),
         destination_account_id: row.get("destination_account_id"),
-        amount: Decimal::from(row.get::<_, PgDecimal>("amount")),
+        amount: row.get("amount"),
         currency: row.get("currency"),
         status: TransactionStatus::from(row.get::<_, &str>("status")),
         transaction_type: TransactionType::from(row.get::<_, &str>("transaction_type")),
@@ -321,7 +339,7 @@ pub async fn get_user_transactions(
             id: row.get("id"),
             source_account_id: row.get("source_account_id"),
             destination_account_id: row.get("destination_account_id"),
-            amount: Decimal::from(row.get::<_, PgDecimal>("amount")),
+            amount: row.get("amount"),
             currency: row.get("currency"),
             status: TransactionStatus::from(row.get::<_, &str>("status")),
             transaction_type: TransactionType::from(row.get::<_, &str>("transaction_type")),

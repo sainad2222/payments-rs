@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS accounts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    balance DECIMAL(19, 4) NOT NULL DEFAULT 0.00,
+    balance BIGINT NOT NULL DEFAULT 0,
     currency VARCHAR(3) NOT NULL DEFAULT 'USD',
     status VARCHAR(20) NOT NULL DEFAULT 'active',
     created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT NOW(),
@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS transactions (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     source_account_id UUID REFERENCES accounts(id),
     destination_account_id UUID REFERENCES accounts(id),
-    amount DECIMAL(19, 4) NOT NULL,
+    amount BIGINT NOT NULL,
     currency VARCHAR(3) NOT NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'pending',
     transaction_type VARCHAR(20) NOT NULL,

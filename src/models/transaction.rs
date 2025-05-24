@@ -1,5 +1,4 @@
 use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use validator::Validate;
@@ -9,7 +8,7 @@ pub struct Transaction {
     pub id: Uuid,
     pub source_account_id: Option<Uuid>,
     pub destination_account_id: Option<Uuid>,
-    pub amount: Decimal,
+    pub amount: i64,
     pub currency: String,
     pub status: TransactionStatus,
     pub transaction_type: TransactionType,
@@ -84,8 +83,8 @@ pub struct CreateTransactionRequest {
     pub source_account_id: Option<Uuid>,
     pub destination_account_id: Option<Uuid>,
     
-    #[validate(custom = "validate_positive_amount")]
-    pub amount: Decimal,
+    #[validate(range(min = 1, message = "Amount must be greater than zero"))]
+    pub amount: i64,
     
     #[validate(length(equal = 3, message = "Currency code must be 3 characters"))]
     pub currency: String,
@@ -94,21 +93,12 @@ pub struct CreateTransactionRequest {
     pub description: Option<String>,
 }
 
-fn validate_positive_amount(amount: &Decimal) -> Result<(), validator::ValidationError> {
-    if *amount <= Decimal::ZERO {
-        let mut error = validator::ValidationError::new("positive_amount");
-        error.message = Some(std::borrow::Cow::Owned("Amount must be greater than zero".to_string()));
-        return Err(error);
-    }
-    Ok(())
-}
-
 #[derive(Debug, Serialize, Deserialize)]
 pub struct TransactionResponse {
     pub id: Uuid,
     pub source_account_id: Option<Uuid>,
     pub destination_account_id: Option<Uuid>,
-    pub amount: Decimal,
+    pub amount: i64,
     pub currency: String,
     pub status: String,
     pub transaction_type: String,

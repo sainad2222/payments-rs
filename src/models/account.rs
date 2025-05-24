@@ -1,5 +1,4 @@
 use chrono::{DateTime, Utc};
-use rust_decimal::Decimal;
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 use validator::Validate;
@@ -8,7 +7,7 @@ use validator::Validate;
 pub struct Account {
     pub id: Uuid,
     pub user_id: Uuid,
-    pub balance: Decimal,
+    pub balance: i64,
     pub currency: String,
     pub status: AccountStatus,
     pub created_at: DateTime<Utc>,
@@ -54,7 +53,7 @@ pub struct CreateAccountRequest {
 pub struct AccountResponse {
     pub id: Uuid,
     pub user_id: Uuid,
-    pub balance: Decimal,
+    pub balance: i64,
     pub currency: String,
     pub status: String,
     pub created_at: DateTime<Utc>,

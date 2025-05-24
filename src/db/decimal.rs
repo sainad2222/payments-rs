@@ -28,7 +28,7 @@ impl<'a> FromSql<'a> for PgDecimal {
                 }
 
                 // Calculate the total number of digits
-                let total_digits = (weight + 1) * 4;
+                let _total_digits = (weight + 1) * 4;
                 let mut result = String::new();
 
                 // Handle sign

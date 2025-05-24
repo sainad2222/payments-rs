@@ -1,8 +1,6 @@
-use crate::db::decimal::PgDecimal;
 use crate::models::account::{Account, AccountStatus, CreateAccountRequest};
 use crate::utils::error::AppError;
 use deadpool_postgres::Client;
-use rust_decimal::Decimal;
 use uuid::Uuid;
 
 pub async fn create_account(
@@ -38,7 +36,7 @@ pub async fn create_account(
     Ok(Account {
         id: row.get("id"),
         user_id: row.get("user_id"),
-        balance: Decimal::from(row.get::<_, PgDecimal>("balance")),
+        balance: row.get("balance"),
         currency: row.get("currency"),
         status: AccountStatus::from(row.get::<_, &str>("status")),
         created_at: row.get("created_at"),
@@ -63,7 +61,7 @@ where
     Ok(Account {
         id: row.get("id"),
         user_id: row.get("user_id"),
-        balance: Decimal::from(row.get::<_, PgDecimal>("balance")),
+        balance: row.get("balance"),
         currency: row.get("currency"),
         status: AccountStatus::from(row.get::<_, &str>("status")),
         created_at: row.get("created_at"),
@@ -87,7 +85,7 @@ pub async fn get_user_accounts(client: &Client, user_id: Uuid) -> Result<Vec<Acc
         .map(|row| Account {
             id: row.get("id"),
             user_id: row.get("user_id"),
-            balance: Decimal::from(row.get::<_, PgDecimal>("balance")),
+            balance: row.get("balance"),
             currency: row.get("currency"),
             status: AccountStatus::from(row.get::<_, &str>("status")),
             created_at: row.get("created_at"),
@@ -101,7 +99,7 @@ pub async fn get_user_accounts(client: &Client, user_id: Uuid) -> Result<Vec<Acc
 pub async fn update_balance<T>(
     client: &T,
     account_id: Uuid,
-    amount: Decimal,
+    amount: i64,
 ) -> Result<Account, AppError>
 where
     T: deadpool_postgres::GenericClient + Sync + Send,
@@ -112,7 +110,7 @@ where
              SET balance = balance + $1, updated_at = NOW() 
              WHERE id = $2 
              RETURNING id, user_id, balance, currency, status, created_at, updated_at",
-            &[&PgDecimal(amount), &account_id],
+            &[&amount, &account_id],
         )
         .await?
         .ok_or_else(|| AppError::NotFound(format!("Account not found: {}", account_id)))?;
@@ -120,7 +118,7 @@ where
     Ok(Account {
         id: row.get("id"),
         user_id: row.get("user_id"),
-        balance: Decimal::from(row.get::<_, PgDecimal>("balance")),
+        balance: row.get("balance"),
         currency: row.get("currency"),
         status: AccountStatus::from(row.get::<_, &str>("status")),
         created_at: row.get("created_at"),
