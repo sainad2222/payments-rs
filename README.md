@@ -28,7 +28,7 @@ A RESTful API backend service for managing transactions and user accounts in a s
 
 ## Getting Started
 
-### Running with Docker Compose
+### Running with Docker Compose (Not fully working yet)
 
 The easiest way to run the application is using Docker Compose:
 
@@ -47,10 +47,12 @@ docker-compose up -d
 
 To run the application without Docker:
 
-1. Install Rust and Cargo (https://rustup.rs/)
-2. Set up a PostgreSQL database
-3. Create a `.env` file based on `.env.example`
-4. Run the application:
+1. Install Rust, Cargo (https://rustup.rs/)
+2. Install cargo sqlx (`cargo install sqlx-cli`)
+3. Set up a PostgreSQL database by creating a database called `payments_db`
+4. Run migrations (`sqlx migrate run`)
+5. Create a `.env` file based on `.env.example`
+6. Run the application:
 
 ```bash
 cargo run
@@ -174,7 +176,7 @@ Content-Type: application/json
 {
   "source_account_id": "source-account-uuid",  // Optional for deposits
   "destination_account_id": "dest-account-uuid",  // Optional for withdrawals
-  "amount": "100.00",
+  "amount": 10000,
   "currency": "USD",
   "transaction_type": "transfer",  // "deposit", "withdrawal", or "transfer"
   "description": "Payment for services"
